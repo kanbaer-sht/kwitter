@@ -1,7 +1,7 @@
 # Twitter Clone Coding
 フロントエンドの勉強のため、Reactを利用してこのプロジェクトを始めました。
 
-### 🛠 &nbsp;Which Language Using This Project 
+### 🛠 &nbsp;Which tech using this project 
 ![HTML5](https://img.shields.io/badge/-HTML5-E34F26?style=flat&logo=html5&logoColor=white)&nbsp;
 ![CSS3](https://img.shields.io/badge/-CSS3-1572B6?style=flat&logo=css3)&nbsp;
 ![JavaScript](https://img.shields.io/badge/-JavaScript-05122A?style=flat&logo=javascript&logoColor=white&color=orange)&nbsp;
