@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { authService } from 'fbConf';
+import { authService, firebaseInstance } from 'fbConf';
 
 const Auth = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [newAccount, setNewAccount] = useState(true);
+    const [email, setEmail]             = useState("");
+    const [password, setPassword]       = useState("");
+    const [newAccount, setNewAccount]   = useState(true);
+    const [error, setError]             = useState("");
 
     const onChange = (e) => {
         if (e.target.name === "email") {
             setEmail(e.target.value);
         } else if (e.target.name === "password") {
             setPassword(e.target.value);
-        };
+        }
     };
 
     const onSubmit = async (e) => {
@@ -31,9 +32,26 @@ const Auth = () => {
             }
             console.log(data);
         } catch(error) {
-            console.log(error);
+            setError(error.message);
         }
     };
+
+    const toggleAccount = () => {
+        setNewAccount((prev) => !prev);
+    }
+
+    const onSocialClick = async (e) => {
+        let provider;
+        
+        if (e.target.name === "google") {
+            provider = new firebaseInstance.auth.GoogleAuthProvider();
+        } else if (e.target.name === "github") {
+            provider = new firebaseInstance.auth.GithubAuthProvider();
+        }
+
+        const data = await authService.signInWithPopup(provider);
+        console.log(data);
+    }
 
     return (
         <div>
@@ -56,12 +74,14 @@ const Auth = () => {
                 />
                 <input 
                 type="submit" 
-                value={newAccount ? "Create Account" : "Log In"} 
+                value={newAccount ? "Create Account" : "Sign In"} 
                 />
+                {error}
             </form>
+            <span onClick={toggleAccount} > {newAccount ? "Sign In" : "Create Account"}</span>
             <div>
-                <button>Continue with Google</button>
-                <button>Continue with Github</button>
+                <button name="google" onClick={onSocialClick}>Continue with Google</button>
+                <button name="github" onClick={onSocialClick}>Continue with Github</button>
             </div>    
         </div>
     );
