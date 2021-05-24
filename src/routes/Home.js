@@ -1,8 +1,25 @@
-import React, { useState } from 'react';
-import { dbService } from '../fbConf';
+import React, { useEffect, useState } from 'react';
+import { dbService } from 'fbConf';
 
 const Home = () => {
-    const [kweet, setKweet] = useState("");
+    const [kweet, setKweet]     = useState("");
+    const [kweets, setKweets]   = useState([]);
+
+    const getKweets = async () => {
+        const dbKweets = await dbService.collection("kweet").get();
+        dbKweets.forEach((document) => {
+            const kweetObject = {
+                ...document.data(),
+                id: document.id,
+                
+            }
+            setKweets((prev) => [kweetObject, ...prev]);
+        });
+    }
+
+    useEffect(() => {
+        getKweets();
+    }, []);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -16,7 +33,7 @@ const Home = () => {
     const onChange = (e) => {
         setKweet(e.target.value);
     }
-
+    console.log(kweets);
     return (
         <>
         <div>
@@ -33,6 +50,12 @@ const Home = () => {
                 value="Kweet" 
                 />
             </form>
+            <div>
+                {kweets.map((kweet) => (
+                <div key={kweet.id}>
+                    <h4>{kweet.kweet}</h4>
+                </div>))}
+            </div>
         </div>
         </>
     );
