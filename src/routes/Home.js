@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { dbService } from 'fbConf';
 
-const Home = () => {
+const Home = ({ userObj }) => {
     const [kweet, setKweet]     = useState("");
     const [kweets, setKweets]   = useState([]);
-
-    const getKweets = async () => {
-        const dbKweets = await dbService.collection("kweet").get();
-        dbKweets.forEach((document) => {
-            const kweetObject = {
-                ...document.data(),
-                id: document.id,
-                
-            }
-            setKweets((prev) => [kweetObject, ...prev]);
-        });
-    }
-
+    
     useEffect(() => {
-        getKweets();
+        dbService.collection("kweets").onSnapshot((snapshot) =>{
+            const kweetArr = snapshot.docs.reverse().map((doc) => ({
+                id:doc.id,
+                ...doc.data()
+            }));
+            setKweets(kweetArr);
+            console.log(kweetArr);
+        });
     }, []);
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        await dbService.collection("kweet").add({
-            kweet,
+        await dbService.collection("kweets").add({
+            text:kweet,
+            creatorId: userObj.uid,
             createdAt: Date.now()
         });
         setKweet("");
@@ -33,7 +29,7 @@ const Home = () => {
     const onChange = (e) => {
         setKweet(e.target.value);
     }
-    console.log(kweets);
+    
     return (
         <>
         <div>
@@ -53,7 +49,7 @@ const Home = () => {
             <div>
                 {kweets.map((kweet) => (
                 <div key={kweet.id}>
-                    <h4>{kweet.kweet}</h4>
+                    <h4>{kweet.text}</h4>
                 </div>))}
             </div>
         </div>
