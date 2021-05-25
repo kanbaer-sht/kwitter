@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { dbService } from 'fbConf';
+import Kweet from 'components/Kweet';
 
 const Home = ({ userObj }) => {
     const [kweet, setKweet]     = useState("");
@@ -47,10 +48,13 @@ const Home = ({ userObj }) => {
                 />
             </form>
             <div>
-                {kweets.map((kweet) => (
-                <div key={kweet.id}>
-                    <h4>{kweet.text}</h4>
-                </div>))}
+                {kweets.map((kweet) => ( 
+                    <Kweet 
+                    key={kweet.id}
+                    kweetObj={kweet}
+                    isOwner={kweet.creatorId === userObj.uid}
+                    />
+                ))}
             </div>
         </div>
         </>
