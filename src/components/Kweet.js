@@ -1,4 +1,4 @@
-import { dbService } from 'fbConf';
+import { dbService, storageService } from 'fbConf';
 import React, { useState } from 'react';
 
 const Kweet = ({ kweetObj, isOwner }) => {
@@ -9,6 +9,7 @@ const Kweet = ({ kweetObj, isOwner }) => {
         const ok = window.confirm("정말로 지우시겠습니까?");
         if (ok) {
             await dbService.doc(`kweets/${kweetObj.id}`).delete();
+            await storageService.refFromURL(kweetObj.fileAttachmentUrl).delete();
         }    
     }
 
@@ -47,6 +48,8 @@ const Kweet = ({ kweetObj, isOwner }) => {
             ) : (
                 <>
                     <h4>{kweetObj.text}</h4>
+                    {kweetObj.fileAttachmentUrl && 
+                    (<img src={kweetObj.fileAttachmentUrl} width="50px" height="50ox" alt=""/>)}
                     {isOwner && (
                         <>
                         <button onClick={onDeleteClick}>삭제</button>

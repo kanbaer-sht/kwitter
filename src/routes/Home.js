@@ -19,17 +19,23 @@ const Home = ({ userObj }) => {
         });
     }, []);
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e) => { 
         e.preventDefault();
-        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
-        const response = await fileRef.putString(fileAttachment, "data_url");
-        console.log(response);
-        // await dbService.collection("kweets").add({
-        //     text:kweet,
-        //     creatorId: userObj.uid,
-        //     createdAt: Date.now()
-        // });
-        // setKweet("");
+        let fileAttachmentUrl = "";
+        if(fileAttachment !== "") {
+            const fileAttachmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+            const response = await fileAttachmentRef.putString(fileAttachment, "data_url");
+            fileAttachmentUrl = await response.ref.getDownloadURL();
+        }
+        const kweetObj = {
+            text:kweet,
+            creatorId: userObj.uid,
+            createdAt: Date.now(),
+            fileAttachmentUrl
+        }
+        await dbService.collection("kweets").add(kweetObj);
+        setKweet("");
+        setFileAttachment(null);
     }
 
     const onChange = (e) => {
