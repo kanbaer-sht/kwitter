@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 const Home = ({ userObj }) => {
     const [kweet, setKweet]     = useState("");
     const [kweets, setKweets]   = useState([]);
-    const [fileAttachment, setFileAttachment] = useState(null);
+    const [fileAttachment, setFileAttachment] = useState("");
 
     useEffect(() => {
         dbService.collection("kweets").onSnapshot((snapshot) =>{
@@ -15,7 +15,6 @@ const Home = ({ userObj }) => {
                 ...doc.data()
             }));
             setKweets(kweetArr);
-            console.log(kweetArr);
         });
     }, []);
 
@@ -51,6 +50,7 @@ const Home = ({ userObj }) => {
             setFileAttachment(result);
         }
         reader.readAsDataURL(theFile);
+        
     }
 
     const onRemovePhotoClick = () => {
